@@ -1,0 +1,55 @@
+{
+  "name": "inline-guides",
+  "displayName": "Inline guides",
+  "type": "module",
+  "description": "",
+  "keywords": [],
+  "version": "0.0.0",
+  "license": "MIT",
+  "publisher": "",
+  "engines": {
+    "vscode": "^1.72.0"
+  },
+  "main": "./dist/extension.cjs",
+  "repository": "https://github.com/DadoHR/inline-guides",
+  "bugs": "https://github.com/DadoHR/inline-guides/issues",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:inlineGuides"
+  ],
+  "scripts": {
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --sourcemap --packages=external",
+    "vscode:prepublish": "npm run build"
+  },
+  "contributes": {
+    "viewsWelcome": [
+      {
+        "view": "inlineGuides",
+        "contents": "Looking for guides 👀"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "inlineGuides",
+          "name": "Inline Guides"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.3",
+    "@types/shelljs": "^0.8.12",
+    "@types/vscode": "^1.79.1",
+    "esbuild": "^0.18.11",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "@vscode/ripgrep": "^1.15.5",
+    "shelljs": "^0.8.5",
+    "vscode-ripgrep": "^1.13.2"
+  }
+}
