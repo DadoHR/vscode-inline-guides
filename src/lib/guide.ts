@@ -1,7 +1,7 @@
 import { RipgrepMessageMatch, run } from './ripgrep.js';
 
-export const GUIDE_LINE_PARSE_REGEX =
-  /@guide\s+(?<name>.+)\s+-\s+(?<step>[0-9]+(\.[0-9]+)*)\s+(?<description>.+)$/gm;
+const GUIDE_LINE_PARSE_REGEX =
+  /@guide\s+(?<name>.+)\s+-\s+(?<step>[0-9]+(\.[0-9]+)*)\s+(?<description>.+)$/;
 
 export type GuideStep = {
   name: string;
@@ -30,11 +30,9 @@ export type GuideItem = {
   };
 };
 
-export function getInfoFromMessage(
-  message: RipgrepMessageMatch
-): Pick<GuideItem, 'name' | 'step' | 'description'> | null {
+export function getInfoFromLine(line: string) {
   const { name, step, description } =
-    GUIDE_LINE_PARSE_REGEX.exec(message.data.lines.text)?.groups ?? {};
+    line.match(GUIDE_LINE_PARSE_REGEX)?.groups ?? {};
 
   if (!name || !step || !description) {
     return null;
@@ -45,6 +43,12 @@ export function getInfoFromMessage(
     step,
     description
   };
+}
+
+export function getInfoFromMessage(
+  message: RipgrepMessageMatch
+): Pick<GuideItem, 'name' | 'step' | 'description'> | null {
+  return getInfoFromLine(message.data.lines.text);
 }
 
 export function createGuideItemFromMessage(
