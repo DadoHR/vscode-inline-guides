@@ -47,7 +47,8 @@ export class InlineGuidesProvider
       );
     }
 
-    const guideTree = getGuideTree(await getGuides(this.#workspaceRoot));
+    const guides = await getGuides(this.#workspaceRoot);
+    const guideTree = getGuideTree(guides);
     return Object.values(guideTree).map((guide) => new GuideTreeItem(guide));
   }
 

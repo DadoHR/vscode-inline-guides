@@ -25,6 +25,19 @@
     "test": "vitest run"
   },
   "contributes": {
+    "configuration": {
+      "title": "Foobar",
+      "properties": {
+        "inlineGuides.ignorePattern": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Additional paths to ignore"
+        }
+      }
+    },
     "viewsWelcome": [
       {
         "view": "inlineGuides",

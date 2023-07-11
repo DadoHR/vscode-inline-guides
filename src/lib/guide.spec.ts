@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { Guide, GuideItem, getGuideTree, getInfoFromLine } from './guide.js';
+import {
+  Guide,
+  GuideItem,
+  GuideParseError,
+  getGuideTree,
+  getInfoFromLine
+} from './guide.js';
 
 describe(getInfoFromLine.name, () => {
   test.each<[string]>([
@@ -35,6 +41,17 @@ describe(getInfoFromLine.name, () => {
       step: '1.2.3',
       description: 'Guide description'
     });
+  });
+
+  test.each<[string]>([
+    ['@guide Guide name 1.1 - Guide description'],
+    ['$guide Guide name - 1.1 Guide description'],
+    // n-dash
+    ['@guide Guide name – 1.1 Guide description'],
+    // m-dash
+    ['@guide Guide name — 1.1 Guide description']
+  ])('given invalid lines, throws GuideParseError', (line) => {
+    expect(() => getInfoFromLine(line)).toThrowError(GuideParseError);
   });
 });
 

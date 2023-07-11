@@ -1,7 +1,8 @@
 import { RipgrepMessageMatch, run } from './ripgrep.js';
 
+const GUIDE_LINE_SEARCH_REGEX = '@guide\\s+.+\\s+-\\s+[0-9]+(.[0-9]+)*\\s+.+';
 const GUIDE_LINE_PARSE_REGEX =
-  /@guide\s+(?<name>.+)\s+-\s+(?<step>[0-9]+(\.[0-9]+)*)\s+(?<description>.+)$/;
+  /@guide\s+(?<name>.+)\s+-\s+(?<step>[0-9]+(\.[0-9]+)*)\s+(?<description>.+)$/m;
 
 export type GuideStep = {
   name: string;
@@ -30,12 +31,30 @@ export type GuideItem = {
   };
 };
 
+export class GuideParseError extends Error {
+  constructor(
+    error: string,
+    public readonly info: Partial<
+      Pick<GuideItem, 'name' | 'step' | 'description'>
+    > & {
+      line: string;
+    }
+  ) {
+    super(error);
+  }
+}
+
 export function getInfoFromLine(line: string) {
   const { name, step, description } =
-    line.match(GUIDE_LINE_PARSE_REGEX)?.groups ?? {};
+    GUIDE_LINE_PARSE_REGEX.exec(line.trim())?.groups ?? {};
 
   if (!name || !step || !description) {
-    return null;
+    throw new GuideParseError('Guide doesn’t meet format', {
+      line,
+      name,
+      step,
+      description
+    });
   }
 
   return {
@@ -45,18 +64,10 @@ export function getInfoFromLine(line: string) {
   };
 }
 
-export function getInfoFromMessage(
-  message: RipgrepMessageMatch
-): Pick<GuideItem, 'name' | 'step' | 'description'> | null {
-  return getInfoFromLine(message.data.lines.text);
-}
-
 export function createGuideItemFromMessage(
   message: RipgrepMessageMatch
-): GuideItem | null {
-  const info = getInfoFromMessage(message);
-
-  if (!info) return null;
+): GuideItem {
+  const info = getInfoFromLine(message.data.lines.text);
 
   return {
     ...info,
@@ -68,14 +79,22 @@ export function createGuideItemFromMessage(
 }
 
 export async function getGuides(workspacePath: string): Promise<GuideItem[]> {
-  const ripgrepMessages = await run('@guide', { cwd: workspacePath });
+  const ripgrepMessages = await run(GUIDE_LINE_SEARCH_REGEX, {
+    cwd: workspacePath
+  });
   const matches = ripgrepMessages.filter(
     (m): m is RipgrepMessageMatch => m.type === 'match'
   );
 
   return matches
-    .map<GuideItem | null>((message) => createGuideItemFromMessage(message))
-    .filter((d): d is GuideItem => d !== null)
+    .map<GuideItem | null>((message) => {
+      try {
+        return createGuideItemFromMessage(message);
+      } catch {
+        return null;
+      }
+    })
+    .filter((item): item is GuideItem => item !== null)
     .sort((a, b) => a.step.localeCompare(b.step));
 }
 
