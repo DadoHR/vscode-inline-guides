@@ -78,6 +78,14 @@ export function createGuideItemFromMessage(
   };
 }
 
+export function sortByStep(guides: GuideItem[]): GuideItem[] {
+  return Array.from(guides).sort((a, b) =>
+    a.step.localeCompare(b.step, 'en', {
+      numeric: true
+    })
+  );
+}
+
 export async function getGuides(workspacePath: string): Promise<GuideItem[]> {
   const ripgrepMessages = await run(GUIDE_LINE_SEARCH_REGEX, {
     cwd: workspacePath
@@ -86,16 +94,17 @@ export async function getGuides(workspacePath: string): Promise<GuideItem[]> {
     (m): m is RipgrepMessageMatch => m.type === 'match'
   );
 
-  return matches
-    .map<GuideItem | null>((message) => {
-      try {
-        return createGuideItemFromMessage(message);
-      } catch {
-        return null;
-      }
-    })
-    .filter((item): item is GuideItem => item !== null)
-    .sort((a, b) => a.step.localeCompare(b.step));
+  return sortByStep(
+    matches
+      .map<GuideItem | null>((message) => {
+        try {
+          return createGuideItemFromMessage(message);
+        } catch {
+          return null;
+        }
+      })
+      .filter((item): item is GuideItem => item !== null)
+  );
 }
 
 export function getGuideTree(guides: GuideItem[]): GuideTree {

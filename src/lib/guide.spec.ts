@@ -4,7 +4,8 @@ import {
   GuideItem,
   GuideParseError,
   getGuideTree,
-  getInfoFromLine
+  getInfoFromLine,
+  sortByStep
 } from './guide.js';
 
 function createGuideItem(overrides: Partial<GuideItem> = {}): GuideItem {
@@ -142,5 +143,55 @@ describe(getGuideTree.name, () => {
         }
       }
     });
+  });
+});
+
+describe(sortByStep.name, () => {
+  test('Given items with steps with incrementing parts, returns items in incrementing order', () => {
+    const items = [
+      createGuideItem({ step: '1.2' }),
+      createGuideItem({ step: '0.0' }),
+      createGuideItem({ step: '1.1' }),
+      createGuideItem({ step: '1.11' }),
+      createGuideItem({ step: '1.22' }),
+      createGuideItem({ step: '0.1' }),
+      createGuideItem({ step: '1.0' }),
+      createGuideItem({ step: '0.2' })
+    ];
+
+    const result = sortByStep(items);
+
+    expect(result).toEqual([
+      expect.objectContaining<Partial<GuideItem>>({ step: '0.0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '0.1' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '0.2' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.1' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.2' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.11' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.22' })
+    ]);
+  });
+
+  test('Given items with steps with different number of segments, returns items where longer segments are placed after matching shorter segments', () => {
+    const items = [
+      createGuideItem({ step: '0' }),
+      createGuideItem({ step: '0.0.0' }),
+      createGuideItem({ step: '0.0' }),
+      createGuideItem({ step: '1.0.0' }),
+      createGuideItem({ step: '1' }),
+      createGuideItem({ step: '1.0' })
+    ];
+
+    const result = sortByStep(items);
+
+    expect(result).toEqual([
+      expect.objectContaining<Partial<GuideItem>>({ step: '0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '0.0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '0.0.0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.0' }),
+      expect.objectContaining<Partial<GuideItem>>({ step: '1.0.0' })
+    ]);
   });
 });
