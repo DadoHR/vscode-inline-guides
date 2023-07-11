@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Guide, GuideStep, getGuideTree, getGuides } from './lib/guide.js';
 
-class GuideTreeItem extends vscode.TreeItem {
+class GuideTreeGuideItem extends vscode.TreeItem {
   guide: Guide;
 
   constructor(guide: Guide) {
@@ -10,7 +10,7 @@ class GuideTreeItem extends vscode.TreeItem {
   }
 }
 
-class GuideStepTreeItem extends vscode.TreeItem {
+class GuideTreeStepItem extends vscode.TreeItem {
   step: GuideStep;
 
   constructor(step: GuideStep, workspaceRoot: string) {
@@ -29,31 +29,44 @@ class GuideStepTreeItem extends vscode.TreeItem {
   }
 }
 
+type GuideTreeItem = GuideTreeGuideItem | GuideTreeStepItem;
+
 export class InlineGuidesProvider
-  implements vscode.TreeDataProvider<GuideTreeItem | GuideStepTreeItem>
+  implements vscode.TreeDataProvider<GuideTreeItem>
 {
+  #onDidChangeTreeData: vscode.EventEmitter<
+    GuideTreeItem | undefined | null | void
+  > = new vscode.EventEmitter<GuideTreeItem | undefined | null | void>();
   #workspaceRoot: string;
+
+  readonly onDidChangeTreeData: vscode.Event<
+    GuideTreeItem | undefined | null | void
+  > = this.#onDidChangeTreeData.event;
 
   constructor(workspaceRoot: string) {
     this.#workspaceRoot = workspaceRoot;
   }
 
-  async getChildren(
-    element?: GuideTreeItem
-  ): Promise<(GuideTreeItem | GuideStepTreeItem)[]> {
+  async getChildren(element?: GuideTreeGuideItem): Promise<GuideTreeItem[]> {
     if (element) {
       return Object.values(element.guide.steps).map(
-        (step) => new GuideStepTreeItem(step, this.#workspaceRoot)
+        (step) => new GuideTreeStepItem(step, this.#workspaceRoot)
       );
     }
 
     const guides = await getGuides(this.#workspaceRoot);
     const guideTree = getGuideTree(guides);
-    return Object.values(guideTree).map((guide) => new GuideTreeItem(guide));
+    return Object.values(guideTree).map(
+      (guide) => new GuideTreeGuideItem(guide)
+    );
   }
 
-  getTreeItem(element: GuideTreeItem): vscode.TreeItem {
+  getTreeItem(element: GuideTreeGuideItem): vscode.TreeItem {
     return element;
+  }
+
+  reload(): void {
+    this.#onDidChangeTreeData.fire();
   }
 }
 
@@ -68,6 +81,8 @@ export function activate() {
     return;
   }
 
+  const inlineGuidesProvider = new InlineGuidesProvider(rootPath);
+
   vscode.commands.registerCommand(
     'inlineGuides.openStep',
     async (step: GuideStep) => {
@@ -81,9 +96,11 @@ export function activate() {
       );
     }
   );
-
-  vscode.window.registerTreeDataProvider(
-    'inlineGuides',
-    new InlineGuidesProvider(rootPath)
+  vscode.commands.registerCommand('inlineGuides.reload', () =>
+    inlineGuidesProvider.reload()
   );
+
+  vscode.workspace.onDidSaveTextDocument(() => inlineGuidesProvider.reload());
+
+  vscode.window.registerTreeDataProvider('inlineGuides', inlineGuidesProvider);
 }

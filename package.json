@@ -25,18 +25,21 @@
     "test": "vitest run --coverage"
   },
   "contributes": {
-    "configuration": {
-      "title": "Foobar",
-      "properties": {
-        "inlineGuides.ignorePattern": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Additional paths to ignore"
-        }
+    "commands": [
+      {
+        "command": "inlineGuides.reload",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "inlineGuides.reload",
+          "when": "view == inlineGuides",
+          "group": "navigation"
+        }
+      ]
     },
     "viewsWelcome": [
       {
