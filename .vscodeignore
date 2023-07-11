@@ -1,0 +1,8 @@
+.editorconfig
+.gitignore
+.prettierrc
+.tsconfig.json
+.vscode-test/**
+.vscode/**
+node_modules/**
+src/**
