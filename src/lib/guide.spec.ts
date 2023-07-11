@@ -7,6 +7,20 @@ import {
   getInfoFromLine
 } from './guide.js';
 
+function createGuideItem(overrides: Partial<GuideItem> = {}): GuideItem {
+  const item: GuideItem = {
+    name: 'Guide name',
+    description: 'Guide description',
+    step: '1',
+    location: {
+      filePath: 'file.ts',
+      lineNumber: 1
+    }
+  };
+
+  return Object.assign(item, overrides);
+}
+
 describe(getInfoFromLine.name, () => {
   test.each<[string]>([
     // Single-line comment used in C, C++, ECMAScript
@@ -58,42 +72,10 @@ describe(getInfoFromLine.name, () => {
 describe(getGuideTree.name, () => {
   test('given Guides with the name, groups them', () => {
     const guides: GuideItem[] = [
-      {
-        name: 'One',
-        step: '1.1',
-        description: 'One',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 1
-        }
-      },
-      {
-        name: 'One',
-        step: '1.2',
-        description: 'Two',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 2
-        }
-      },
-      {
-        name: 'Two',
-        step: '1.1',
-        description: 'One',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 3
-        }
-      },
-      {
-        name: 'Two',
-        step: '1.2',
-        description: 'Two',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 4
-        }
-      }
+      createGuideItem({ name: 'One', step: '1.1' }),
+      createGuideItem({ name: 'One', step: '1.2' }),
+      createGuideItem({ name: 'Two', step: '1.1' }),
+      createGuideItem({ name: 'Two', step: '1.2' })
     ];
 
     const result = getGuideTree(guides);
@@ -103,11 +85,9 @@ describe(getGuideTree.name, () => {
         name: 'One',
         steps: {
           '1.1': expect.objectContaining<Partial<Guide['steps'][number]>>({
-            name: 'One',
             step: '1.1'
           }),
           '1.2': expect.objectContaining<Partial<Guide['steps'][number]>>({
-            name: 'Two',
             step: '1.2'
           })
         }
@@ -116,11 +96,9 @@ describe(getGuideTree.name, () => {
         name: 'Two',
         steps: {
           '1.1': expect.objectContaining<Partial<Guide['steps'][number]>>({
-            name: 'One',
             step: '1.1'
           }),
           '1.2': expect.objectContaining<Partial<Guide['steps'][number]>>({
-            name: 'Two',
             step: '1.2'
           })
         }
@@ -130,33 +108,21 @@ describe(getGuideTree.name, () => {
 
   test('given Guides with duplicate steps, prioritizes the last duplicate', () => {
     const guides: GuideItem[] = [
-      {
+      createGuideItem({
         name: 'One',
         step: '1.1',
-        description: 'One',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 1
-        }
-      },
-      {
+        description: 'One'
+      }),
+      createGuideItem({
         name: 'One',
         step: '1.1',
-        description: 'One (duplicate)',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 2
-        }
-      },
-      {
+        description: 'One (duplicate)'
+      }),
+      createGuideItem({
         name: 'One',
         step: '1.2',
-        description: 'Two',
-        location: {
-          filePath: 'file.ts',
-          lineNumber: 3
-        }
-      }
+        description: 'Two'
+      })
     ];
 
     const result = getGuideTree(guides);
