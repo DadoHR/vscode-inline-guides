@@ -1,0 +1,10 @@
+{
+  "Create inline guide": {
+    "scope": "css,handlebars,html,markdown,razor,vue-html,xml,xsl",
+    "prefix": "guide",
+    "body": [
+      "$BLOCK_COMMENT_START @guide ${1:name} - ${2:1.0} ${3:description} $BLOCK_COMMENT_END"
+    ],
+    "description": "Create inline guide"
+  }
+}

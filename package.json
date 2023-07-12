@@ -14,6 +14,7 @@
   "repository": "https://github.com/DadoHR/inline-guides",
   "bugs": "https://github.com/DadoHR/inline-guides/issues",
   "categories": [
+    "Snippets",
     "Other"
   ],
   "activationEvents": [
@@ -42,10 +43,244 @@
         }
       ]
     },
+    "snippets": [
+      {
+        "language": "abap",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "bat",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "bibtex",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "c",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "clojure",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "coffeescript",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "cpp",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "csharp",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "css",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "cuda-cpp",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "dockercompose",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "dockerfile",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "fsharp",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "go",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "groovy",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "haml",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "handlebars",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "html",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "ini",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "jade",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "java",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "javascript",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "jsonc",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "latex",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "less",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "lua",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "makefile",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "markdown",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "objective-c",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "objective-cpp",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "perl",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "perl6",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "php",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "powershell",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "pug",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "python",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "r",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "razor",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "ruby",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "rust",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "sass",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "scss",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "shaderlab",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "shellscript",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "slim",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "sql",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "stylus",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "swift",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "tex",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "typescript",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "vb",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "vue",
+        "path": "snippets/line.code-snippets"
+      },
+      {
+        "language": "vue-html",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "xml",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "xsl",
+        "path": "snippets/block.code-snippets"
+      },
+      {
+        "language": "yaml",
+        "path": "snippets/line.code-snippets"
+      }
+    ],
     "viewsWelcome": [
       {
         "view": "inlineGuides",
-        "contents": "Looking for guides 👀"
+        "contents": "No guides found in this workspace 👀\n[Reload](command:inlineGuides.reload)"
       }
     ],
     "views": {
