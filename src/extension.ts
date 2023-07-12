@@ -34,14 +34,12 @@ type GuideTreeItem = GuideTreeGuideItem | GuideTreeStepItem;
 export class InlineGuidesProvider
   implements vscode.TreeDataProvider<GuideTreeItem>
 {
-  #onDidChangeTreeData: vscode.EventEmitter<
-    GuideTreeItem | undefined | null | void
-  > = new vscode.EventEmitter<GuideTreeItem | undefined | null | void>();
+  #onDidChangeTreeData: vscode.EventEmitter<void> =
+    new vscode.EventEmitter<void>();
   #workspacePaths: string[];
 
-  readonly onDidChangeTreeData: vscode.Event<
-    GuideTreeItem | undefined | null | void
-  > = this.#onDidChangeTreeData.event;
+  readonly onDidChangeTreeData: vscode.Event<void> =
+    this.#onDidChangeTreeData.event;
 
   constructor(workspacePaths: string[]) {
     this.#workspacePaths = workspacePaths;
@@ -97,6 +95,8 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
+    vscode.workspace.onDidSaveTextDocument(() => inlineGuidesProvider.reload()),
+
     vscode.commands.registerCommand(
       'inlineGuides.openStep',
       async (step: GuideStep) => {
@@ -117,6 +117,4 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window.registerTreeDataProvider('inlineGuides', inlineGuidesProvider)
   );
-
-  vscode.workspace.onDidSaveTextDocument(() => inlineGuidesProvider.reload());
 }
