@@ -2,11 +2,11 @@
   "name": "inline-guides",
   "displayName": "Inline guides",
   "type": "module",
-  "description": "",
+  "description": "Navigate your codebase with guides.",
   "keywords": [],
   "version": "0.0.1",
   "license": "MIT",
-  "publisher": "",
+  "publisher": "DadoHR",
   "engines": {
     "vscode": "^1.72.0"
   },
