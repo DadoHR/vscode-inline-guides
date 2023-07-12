@@ -17,6 +17,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:inlineGuides.reload",
     "onView:inlineGuides"
   ],
   "scripts": {
@@ -28,7 +29,7 @@
     "commands": [
       {
         "command": "inlineGuides.reload",
-        "title": "Reload inline guides",
+        "title": "Inline guides: Reload",
         "icon": "$(refresh)"
       }
     ],
