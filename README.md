@@ -2,7 +2,15 @@
 
 Navigate your codebase with guides.
 
-![Screenshot of tree view](./docs//example-tree-view.png)
+![Screenshot of tree view](./docs/example-tree-view.png?raw=true)
+
+## Installation
+
+Get the extension in Visual Studio Code, from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=dadohr.inline-guides), or run:
+
+```js
+ext install dadohr.inline-guides
+```
 
 ## Usage
 
