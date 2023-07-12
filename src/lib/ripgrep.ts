@@ -1,5 +1,5 @@
+import promiseSpawn from '@npmcli/promise-spawn';
 import { rgPath } from '@vscode/ripgrep';
-import { execFile } from 'node:child_process';
 
 export type RipgrepMessageBegin = {
   type: 'begin';
@@ -79,21 +79,28 @@ function parseJsonOutput(output: string): RipgrepMessage[] {
     .map<RipgrepMessage>((line) => JSON.parse(line) as RipgrepMessage);
 }
 
-export function run(query: string, options: { cwd: string }) {
-  return new Promise<RipgrepMessage[]>((resolve, reject) => {
-    execFile(
+export async function run(
+  query: string,
+  options: { cwd: string }
+): Promise<RipgrepMessage[]> {
+  try {
+    const result = await promiseSpawn(
       rgPath,
-      ['--json', query, '.'],
-      options,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(stderr);
-          reject(error);
-          return;
-        }
-
-        resolve(parseJsonOutput(stdout));
-      }
+      [query, '.', '--hidden', '--json'],
+      options
     );
-  });
+
+    return parseJsonOutput(result.stdout);
+  } catch (error: any) {
+    /* Error code 1 means there are no matches
+     * See:
+     * - https://github.com/BurntSushi/ripgrep/issues/948
+     * - https://github.com/BurntSushi/ripgrep/pull/954
+     */
+    if (error.code === 1) {
+      return [];
+    }
+
+    throw error;
+  }
 }

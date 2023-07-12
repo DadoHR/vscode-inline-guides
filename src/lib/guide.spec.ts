@@ -15,7 +15,8 @@ function createGuideItem(overrides: Partial<GuideItem> = {}): GuideItem {
     step: '1',
     location: {
       filePath: 'file.ts',
-      lineNumber: 1
+      lineNumber: 1,
+      workspacePath: ''
     }
   };
 

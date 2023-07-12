@@ -1,3 +1,4 @@
+import * as path from 'node:path';
 import { RipgrepMessageMatch, run } from './ripgrep.js';
 
 const GUIDE_LINE_SEARCH_REGEX = '@guide\\s+.+\\s+-\\s+[0-9]+(.[0-9]+)*\\s+.+';
@@ -16,6 +17,7 @@ export type GuideStep = {
 export type Guide = {
   name: string;
   steps: { [step: string]: GuideStep };
+  workspacePath: string;
 };
 
 export type GuideTree = { [key: string]: Guide };
@@ -28,6 +30,7 @@ export type GuideItem = {
   location: {
     filePath: string;
     lineNumber: number;
+    workspacePath: string;
   };
 };
 
@@ -65,15 +68,17 @@ export function getInfoFromLine(line: string) {
 }
 
 export function createGuideItemFromMessage(
-  message: RipgrepMessageMatch
+  message: RipgrepMessageMatch,
+  workspacePath: string
 ): GuideItem {
   const info = getInfoFromLine(message.data.lines.text);
 
   return {
     ...info,
     location: {
-      filePath: message.data.path.text,
-      lineNumber: message.data.line_number
+      filePath: path.join(workspacePath, message.data.path.text),
+      lineNumber: message.data.line_number,
+      workspacePath
     }
   };
 }
@@ -87,24 +92,31 @@ export function sortByStep(guides: GuideItem[]): GuideItem[] {
 }
 
 export async function getGuides(workspacePath: string): Promise<GuideItem[]> {
-  const ripgrepMessages = await run(GUIDE_LINE_SEARCH_REGEX, {
-    cwd: workspacePath
-  });
-  const matches = ripgrepMessages.filter(
-    (m): m is RipgrepMessageMatch => m.type === 'match'
-  );
+  try {
+    const ripgrepMessages = await run(GUIDE_LINE_SEARCH_REGEX, {
+      cwd: workspacePath
+    });
+    const matches = ripgrepMessages.filter(
+      (m): m is RipgrepMessageMatch => m.type === 'match'
+    );
 
-  return sortByStep(
-    matches
-      .map<GuideItem | null>((message) => {
-        try {
-          return createGuideItemFromMessage(message);
-        } catch {
-          return null;
-        }
-      })
-      .filter((item): item is GuideItem => item !== null)
-  );
+    return sortByStep(
+      matches
+        .map<GuideItem | null>((message) => {
+          try {
+            return createGuideItemFromMessage(message, workspacePath);
+          } catch {
+            return null;
+          }
+        })
+        .filter((item): item is GuideItem => item !== null)
+    );
+  } catch (error) {
+    console.log({
+      cwd: workspacePath
+    });
+    throw error;
+  }
 }
 
 export function getGuideTree(guides: GuideItem[]): GuideTree {
@@ -122,7 +134,8 @@ export function getGuideTree(guides: GuideItem[]): GuideTree {
     } else {
       const guide: Guide = {
         name: guideItem.name,
-        steps: { [step.step]: step }
+        steps: { [step.step]: step },
+        workspacePath: guideItem.location.workspacePath
       };
       tree.set(guideItem.name, guide);
     }
