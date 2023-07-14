@@ -1,6 +1,6 @@
 {
   "Create inline guide": {
-    "scope": "abap,bat,bibtex,c,clojure,coffeescript,cpp,csharp,cuda-cpp,dockercompose,dockerfile,fsharp,go,groovy,haml,ini,jade,java,javascript,javascriptreact,jsonc,latex,less,lua,makefile,objective-c,objective-cpp,perl,perl6,php,powershell,pug,python,r,ruby,rust,sass,scss,shaderlab,shellscript,slim,sql,stylus,swift,tex,typescript,typescriptreact,vb,vue,yaml",
+    "scope": "bat,bibtex,c,clojure,coffeescript,cpp,csharp,cuda-cpp,dockercompose,dockerfile,fsharp,go,groovy,ini,jade,java,javascript,javascriptreact,jsonc,latex,less,lua,makefile,objective-c,objective-cpp,perl,perl6,php,powershell,python,r,ruby,rust,scss,shaderlab,shellscript,sql,swift,tex,typescript,typescriptreact,vb,vue,yaml",
     "prefix": "guide",
     "body": ["$LINE_COMMENT @guide ${1:name} - ${2:1.0} ${3:description}"],
     "description": "Create inline guide"
